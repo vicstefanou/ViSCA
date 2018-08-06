@@ -1,0 +1,25 @@
+Package: ViSCA
+Type: Package
+Title: Cell-movie Analysis and Visualization
+Version: 0.1.0
+Author: Victoria Stefanou
+Maintainer: Victoria Stefanou <vic.stefanou@gmail.com>
+Description: Routines for analysis of cell-movies at single-cell, colony and population level, visualization of lineage and division trees, tracking errors correction and movie creation.
+Depends: R (>= 3.5.1), igraph (>= 1.2.1)
+Imports: data.table (>= 1.11.4), ggplot2 (>= 3.0.0),
+    graphics, grDevices, stats, utils, 
+    grid,
+    EBImage (>= 4.22.0),
+    fitdistrplus (>= 1.0-9),
+    gplots (>= 3.0.1),
+    gridExtra (>= 2.3),
+    nlsMicrobio (>= 0.0-1),
+    pdist (>= 1.2),
+    R.matlab (>= 3.6.1),
+    scatterplot3d (>= 0.3-41),
+    jsonlite (>= 1.5)
+SystemRequirements: FFmpeg (optional)
+License: GPL-2
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.0.1

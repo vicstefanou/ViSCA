@@ -1,0 +1,91 @@
+#' Find candidate merge cells
+#'
+#' Returns the candidate cells for a given cell to be merged with, in the same or different lineage tree.
+#'
+#' Candidate merge cells are cells of the same colony and frame with least one common pixel with the given cell.
+#'
+#' @section Prerequisites:
+#' This function can be used by \emph{BaSCA} users \bold{only},
+#' importing the data with \code{\link{import_basca}}.
+#'
+#' @param LT The lineage tree where the cell specified in \code{cell} belongs, an object of class \code{"igraph"}.
+#' @param cell The label of the cell in the \code{LT} for which to find candidate merge cells, a character string.
+#' It can be any non-root cell, as returned from \code{\link{get_cells}}.
+#' @param LTcand The lineage tree where the candidate merge cells of \code{cell} will belong, an object of class \code{"igraph"}.
+#' When the default value \code{NULL} is used, candidate merged cells will belong in the \code{LT}.
+#' @param cell_list A list containing all the cell instants of the movie.
+#' @param col_list A list containing all the colony instants of the movie.
+#' @param Ncols Number of colonies in the movie, a non-zero positive integer value.
+#'
+#' @param show A logical value (\code{TRUE} or \code{FALSE}) indicating whether \code{\link{view_cell}} will be called for
+#' the \code{cell} and the candidate merge cells.
+#' This capability is useful in order to choose the desired merge cell and call \code{\link{merge_cells}}.
+#' The default value is \code{TRUE}.
+#'
+#' @return The labels of the candidate merge cells, a vector of character strings.
+#' In case no candidate merge cells are found, \code{NULL} is returned.
+#'
+#' @export
+#' @import igraph
+
+get_cand_merge_cells <- function(LT, cell,
+                                 LTcand = NULL,
+                                 cell_list, col_list, Ncols,
+                                 show = TRUE) {
+
+  ############ arguments check ###########################
+
+  possible_cells <- get_cells(tree = LT, treeT = "LT", type = "nr")
+
+  if (!(cell %in% possible_cells)) {
+    stop(paste("Selected cell", paste("\"", cell, "\"", sep = ""), "does not exist\n"))
+  }
+
+  ######################
+
+  if (is.null(LTcand)) { # find candidate cells in the same LT
+    cands <- V(LT)[V(LT)$colId == V(LT)[cell]$colId & V(LT)$name != cell]$name
+  } else { # find candidate cells in the LTcand
+    cands <- V(LTcand)[V(LTcand)$colId == V(LT)[cell]$colId]$name
+  }
+
+  cell_list_ID <- as.numeric(cell) - (Ncols + 1)
+  cell_boundary <- cell_list[[cell_list_ID]]$boundaryPixelList
+
+  candidateCells <- NULL
+
+  for (candidate in cands) {
+
+    candidate_cell_list_ID <- as.numeric(candidate) - (Ncols + 1)
+    candidate_boundary <- cell_list[[candidate_cell_list_ID]]$boundaryPixelList
+
+    distances <- as.matrix(pdist::pdist(cell_boundary, candidate_boundary))
+
+    if (min(distances) == 1) {
+      candidateCells <- c(candidateCells, candidate)
+    }
+
+  }
+
+  if (length(candidateCells) == 0) {
+    return(NULL)
+  }
+
+  if (show) {
+    if (is.null(LTcand)) { # same LT
+      view_cell(LT = LT,
+                cells = c(cell, candidateCells),
+                cell_list = cell_list, col_list = col_list, Ncols = Ncols)
+    } else { # LT, LTcand
+      view_cell(LT = LT,
+                cells = cell,
+                cell_list = cell_list, col_list = col_list, Ncols = Ncols)
+      view_cell(LT = LTcand,
+                cells = candidateCells,
+                cell_list = cell_list, col_list = col_list, Ncols = Ncols)
+    }
+  }
+
+  return(candidateCells)
+
+}
