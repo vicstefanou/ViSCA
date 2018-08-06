@@ -479,6 +479,121 @@ checkField <- function(myList, fieldName) {
     m <- paste("NA values in component \"", fieldName, "\"\n", sep = "")
   }
 
+  if (length(vals) != length(myList)) {
+    m <- paste("Missing values in component \"", fieldName, "\"\n", sep = "")
+  }
+
   return(m)
 
+}
+
+#################################################################################################
+
+checkColList <- function(col_list) {
+
+  if ((m <- checkField(myList = col_list, fieldName = "colName")) != "") {
+    stop(paste("colony list:", m))
+  } else {
+    vals <- unlist(unname(sapply(col_list, function(x) x$colName)))
+    if (length(grep(pattern = "^f\\d+_c\\d+$", x = vals, value=FALSE)) != length(vals)) {
+      stop("colony list: Wrong values in component \"colName\"\n")
+    }
+  }
+
+  if ((m <- checkField(myList = col_list, fieldName = "prev_colName")) != "") {
+    stop(paste("colony list:", m))
+  } else {
+    vals <- unlist(unname(sapply(col_list, function(x) x$prev_colName)))
+    if (!(vals %in% c(unlist(unname(sapply(col_list, function(x) x$colName))), "f0_c0"))) {
+      stop("colony list: Wrong values in component \"prev_colName\"\n")
+    }
+  }
+
+  if ((m <- checkField(myList = col_list, fieldName = "next_colName")) != "") {
+    stop(paste("colony list:", m))
+  } else {
+    vals <- unlist(unname(sapply(col_list, function(x) x$next_colName)))
+    if (!(vals %in% c(unlist(unname(sapply(col_list, function(x) x$colName))), "f00_c0"))) {
+      stop("colony list: Wrong values in component \"next_colName\"\n")
+    }
+  }
+
+  # if (checkField(myList = col_list, fieldName = "ULcorner") == "" &
+  #     checkField(myList = col_list, fieldName = "colImage") == "") {
+  #
+  # }
+
+}
+
+#################################################################################################
+
+checkCellList <- function(cell_list, col_list) {
+
+  if ((m <- checkField(myList = cell_list, fieldName = "cellName")) != "") {
+    stop(paste("cell list:", m))
+  } else {
+    vals <- unlist(unname(sapply(cell_list, function(x) x$cellName)))
+    if (length(grep(pattern = "_f\\d+$", x = vals, value=FALSE)) != length(vals)) {
+      stop("cell list: Wrong values in component \"cellName\"\n")
+    }
+  }
+
+  if ((m <- checkField(myList = cell_list, fieldName = "frame")) != "") {
+    stop(paste("cell list:", m))
+  } else {
+    ###
+  }
+
+  if ((m <- checkField(myList = cell_list, fieldName = "colony")) != "") {
+    stop(paste("cell list:", m))
+  } else {
+    ###
+  }
+
+  if ((m <- checkField(myList = cell_list, fieldName = "daughterIds")) == "Component \"daughterIds\" does not exist\n") {
+    stop(paste("cell list:", m))
+  } else {
+    vals <- unlist(unname(sapply(cell_list, function(x) x$daughterIds)))
+    if (!(vals %in% unlist(unname(sapply(cell_list, function(x) x$cellName))))) {
+      stop("cell list: Wrong values in component \"daughterIds\"\n")
+    }
+    if (length(which(sapply(cell_list, function(x) length(x$daughterIds) > 2) == TRUE)) != 0) {
+      stop("cell list: More than 2 elements in values of component \"daughterIds\"\n")
+    }
+  }
+
+
+  if (!is.null(col_list)) {
+    if ((m <- checkField(myList = cell_list, fieldName = "colId")) != "") {
+      stop(paste("colony list is imported\n
+                 cell list:", m))
+    } else {
+      ###
+    }
+  } else {
+    if (checkField(myList = cell_list, fieldName = "colId") == "") {
+      warning("colony list is not imported\n
+              cell list: Component \"colId\" is useless and should be ommited\n")
+    }
+  }
+
+
+  if (!is.null(col_list)) {
+    if ((m <- checkField(myList = col_list, fieldName = "colImage")) == "") {
+      if (checkField(myList = cell_list, fieldName = "pixelList") == "") {
+        ###
+        # centroid
+      }
+    } else {
+      if (checkField(myList = cell_list, fieldName = "pixelList") == "") {
+        warning(paste("colony list: ", m,
+                      "cell list: Component \"pixelList\" is useless and should be ommited\n", sep = ""))
+      }
+    }
+  } else {
+    if (checkField(myList = cell_list, fieldName = "pixelList") == "") {
+      warning("colony list is not imported\n
+              cell list: Component \"pixelList\" is useless and should be ommited\n")
+    }
+  }
 }

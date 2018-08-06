@@ -77,11 +77,9 @@ plot_col_tree <- function(col_list, Ncols,
 
   for (i_colony in 1:length(col_list)) {
     next_col_Name <- col_list[[i_colony]]$next_colName
-    if (!is.na(next_col_Name)) { # NA if there is no next colony
-      next_col_Id <- which(sapply(col_list, function(x) x$colName == next_col_Name))
-      if (length(next_col_Id) != 0) {  # next col found (next col = "f<Nframes+1>_c0" for last frame colonies in BaSCA)
-        edges <- rbind(edges, c(i_colony + 1, next_col_Id + 1))
-      }
+    next_col_Id <- which(sapply(col_list, function(x) x$colName == next_col_Name))
+    if (length(next_col_Id) != 0) {  # next col found (next col = "f<Nframes+1>_c0" for last frame colonies in BaSCA)
+      edges <- rbind(edges, c(i_colony + 1, next_col_Id + 1))
     }
   }
 

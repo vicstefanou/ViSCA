@@ -84,11 +84,11 @@ Each element of the list is a named list with the following components:
 \item \code{colName} is the name of the colony instant, a character string in the format \code{"f<frame>_c<colony>"},
 where \code{"<frame>"} and \code{"<colony>"} is the ID of the frame and colony (in the frame) of the colony instant, respectively.
 \item \code{prev_colName} is a vector of character strings containing the \code{colName}
-of the corresponding colony instant(s) in the previous frame,
-or \code{NA} for colony instants of the first frame.
+of the corresponding colony instant(s) in the previous frame.
+For colony instants of the first frame this is equal to \code{"f0_c0"}.
 \item \code{next_colName} is a vector of character strings containing the \code{colName}
 of the corresponding colony instant(s) in the next frame.
-For colony instants of the last frame this is equal to \code{"f<Nframes+1>_c0"}.
+For colony instants of the last frame this is equal to \code{"f00_c0"}.
 \item \code{colImage} is the mask of the box surrounding the colony instant, a matrix of \code{0} and \code{1}.
 \code{1}s denote the pixels of cells and \code{0}s the background pixels.
 \item \code{ULcorner} is a vector of 2 non-zero integer values

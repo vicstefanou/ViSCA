@@ -79,11 +79,11 @@
 #' \item \code{colName} is the name of the colony instant, a character string in the format \code{"f<frame>_c<colony>"},
 #' where \code{"<frame>"} and \code{"<colony>"} is the ID of the frame and colony (in the frame) of the colony instant, respectively.
 #' \item \code{prev_colName} is a vector of character strings containing the \code{colName}
-#' of the corresponding colony instant(s) in the previous frame,
-#' or \code{NA} for colony instants of the first frame.
+#' of the corresponding colony instant(s) in the previous frame.
+#' For colony instants of the first frame this is equal to \code{"f0_c0"}.
 #' \item \code{next_colName} is a vector of character strings containing the \code{colName}
 #' of the corresponding colony instant(s) in the next frame.
-#' For colony instants of the last frame this is equal to \code{"f<Nframes+1>_c0"}.
+#' For colony instants of the last frame this is equal to \code{"f00_c0"}.
 #' \item \code{colImage} is the mask of the box surrounding the colony instant, a matrix of \code{0} and \code{1}.
 #' \code{1}s denote the pixels of cells and \code{0}s the background pixels.
 #' \item \code{ULcorner} is a vector of 2 non-zero integer values
@@ -184,14 +184,14 @@ import_basca <- function(file, pixelR, ringW = 10) {
       if (length(data[, i_frame]$colonyProps[, , i_colony]$correspondingColPrevFrameInd) != 0 ) {
         prev_colName <- paste("f", i_frame - 1, "_c", data[, i_frame]$colonyProps[, , i_colony]$correspondingColPrevFrameInd, sep = "")
       } else {
-        prev_colName <- NA
+        prev_colName <- "f0_c0"
       }
 
-      #if (length(data[, i_frame]$colonyProps[, , i_colony]$correspondingColNextFrameInd) != 0 ) {
+      if (length(data[, i_frame]$colonyProps[, , i_colony]$correspondingColPrevFrameInd) != 0 ) {
         next_colName <- paste("f", i_frame + 1, "_c", data[, i_frame]$colonyProps[, , i_colony]$correspondingColNextFrameInd, sep = "")
-      #} else {
-      #  next_colName <- NA
-      #}
+      } else {
+        next_colName <- "f00_c0"
+      }
 
       col_list[[curr_colony]] <- list(colName = paste("f", i_frame, "_c", i_colony, sep = ""),
                                       colImage = t(data[, i_frame]$colonyProps[, , i_colony]$bwColony), # colony coordinates
@@ -229,6 +229,9 @@ import_basca <- function(file, pixelR, ringW = 10) {
 
   close(pb) ### close progress bar
   cat("\n")
+
+  checkColList(col_list = col_list)
+  checkCellList(cell_list = cell_list, col_list = col_list)
 
   Nframes <- length(unique(unlist(sapply(cell_list, function(x) x$frame))))
   Ncols <- length(unique(unlist(sapply(cell_list, function(x) x$colony)[unlist(sapply(cell_list, function(x) x$frame == 1))])))

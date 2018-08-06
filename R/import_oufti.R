@@ -120,6 +120,8 @@ import_oufti <- function(file, pixelR) {
   close(pb) ### close progress bar
   cat("\n")
 
+  checkCellList(cell_list = cell_list, col_list = NULL)
+
   return(list(cell_list = cell_list, col_list = NULL,
               Nframes = Nframes, Ncols = Ncols,
               frameH = NULL, frameW = NULL))
