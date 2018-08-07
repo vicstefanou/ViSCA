@@ -164,7 +164,7 @@ create_movie <- function(overallLT, LT,
     ipb <- ipb + 1
     setTxtProgressBar(pb, ipb) ### update progress bar
 
-    im <- matrix("black", nrow = frameW, ncol = frameH)
+    im <- matrix("black", nrow = frameH, ncol = frameW)
 
     frame_cells <- V(overallLT)[V(overallLT)$frame == i_frame]$name
 

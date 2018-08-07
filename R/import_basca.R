@@ -167,8 +167,8 @@ import_basca <- function(file, pixelR, ringW = 10) {
     setTxtProgressBar(pb, ipb) ### update progress bar
 
     if (i_frame == 1){
-      frameH <- as.vector(data[, i_frame]$x)
-      frameW <- as.vector(data[, i_frame]$y)
+      frameH <- as.vector(data[, i_frame]$y)
+      frameW <- as.vector(data[, i_frame]$x)
     }
 
     for (i_colony in 1:dim(data[, i_frame]$colonyProps)[3]) {
@@ -230,7 +230,7 @@ import_basca <- function(file, pixelR, ringW = 10) {
   close(pb) ### close progress bar
   cat("\n")
 
-  checkColList(col_list = col_list)
+  checkColList(col_list = col_list, frameH = frameH, frameW = frameW)
   checkCellList(cell_list = cell_list, col_list = col_list)
 
   Nframes <- length(unique(unlist(sapply(cell_list, function(x) x$frame))))
