@@ -50,14 +50,14 @@ This argument is ignored in case \code{attrC != "colony"}
 and \code{attrC != "generation"}.}
 
 \item{savePath}{A character string naming the absolute path of the directory
-where the generated \code{.png} files will be saved.
+where the generated \code{.png} files will be saved (excluding the last \code{"/"}).
 The default value is the current working directory \code{getwd()}.
 Image files are named as \code{"frame_<i>.png"}, where \code{"<i>"} is the frame ID.
 The movie file is named as \code{"movie.mp4"}.
 All files will be saved in folder \code{"<attrC>"}
 (or \code{"noColor"} in case \code{attrC = ""}), created under the specified directory.
 \cr\cr
-NOTE: The components should be separated by \code{/} (not \code{\\}) on Windows.}
+NOTE: The components should be separated by \code{"/"}) on Windows.}
 }
 \description{
 Creates the movie of the segmented cells.

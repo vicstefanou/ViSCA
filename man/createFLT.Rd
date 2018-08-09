@@ -14,39 +14,45 @@ createFLT(cell_list, Ncols)
 \value{
 A named list with the following components:
 \item{LTmain}{The main part of the overall FLT,
-a connected lineage tree containing the imaginary \emph{root} cells (object of class \code{"igraph"}).}
+a connected lineage tree containing the imaginary \emph{root} cells (object of class \code{"igraph"}).
+\cr\cr
+Attribute \code{"colony"} in the \code{LTmain} depicts the starting colony of each cell instant
+(i.e. the colony of the corresponding colony's \emph{root} cell from which a cell instant emerged).
+This approach is necessary in order to keep track of merging colonies.}
 \item{branches}{A list with the motherless branches of the overall FLT.
 Each branch (element of the list) is a connected lineage tree (object of class \code{"igraph"}).
 Motherless branches arise from tracking errors, in case a cell instant (root of the branch) fails to be
-connected to any cell instant of the previous frame, or when a cell instant (root of the branch) just entered the field of view.}
+connected to any cell instant of the previous frame,
+or when a cell instant (root of the branch) just entered the field of view.}
 }
 \description{
 Creates the cells' Forest of Lineage Trees (FLT) given a list containing all the cell instants of the movie.
 }
 \details{
-Obligatory attributes are:
-\itemize{
-\item \code{"name"} is the ID of the cell, a non-zero positive integer number stored as a character string.
-Value \code{"1"} corresponds to the main \emph{root} cell.
-Values \code{"1+<i>"} correspond to the colonies' \emph{root} cells,
-where \code{"<i>"} is the colony ID.
-\item \code{"cellName"} is the name of the cell, a character string.
-The main \emph{root} cell is named as \code{"root"}.
-The colonies' \emph{root} cells are named as \code{"colony<i>"},
-where \code{"<i>"} is the colony ID.
-\item \code{"frame"} is the ID of the frame of the cell, a non-zero positive integer number
-\item \code{"colony"} is the ID of the colony of the cell, a non-zero positive integer number
-}
-
-Any other numeric or boolean attribute of a cell is also stored as node attribute to the FLT.
-The imaginary \emph{root} cells have value \code{-1} in all numeric attributes and value \code{FALSE} in all boolean attributes.
-
-Apart from the cell instants of the movie,
-an imaginary main \emph{root} cell as well as imaginary \emph{root} cells for each colony are also added to the FLT.
+Apart from the cell instants of the movie contained in the \code{cell_list},
+FLT nodes include an imaginary main \emph{root} cell as well as imaginary \emph{root} cells for each colony.
 Colonies' \emph{root} cells are daughters of the main \emph{root} cell.
 Cell instants of the first frame of the movie are daughters of the corresponding colony's \emph{root} cell.
 The imaginary \emph{root} cells are used to facilitate the tree representation of the movie and the colony tracking
 and are automatically excluded from the analysis.
+\cr\cr
+Each node of the FLT has as attributes all numeric and boolean values existing as components
+in the corresponding element of the \code{cell_list}.
+The imaginary \emph{root} cells have value \code{-1} in all numeric attributes and value \code{FALSE} in all boolean attributes.
+The following character string values also form attributes of each FLT node:
+\itemize{
+\item \code{"name"} is the label of the cell, a non-zero positive integer number stored as a character string.
+Value \code{"1"} corresponds to the main \emph{root} cell.
+Values \code{"1+<i>"} correspond to the colonies' \emph{root} cells, where \code{"<i>"} is the colony ID.
+The rest values correspond to the cell instants in the \code{cell_list} (1-1 correspondence).
+\item \code{"cellName"}, as in the \code{cell_list}.
+Value \code{"root"} is used for the main \emph{root} cell.
+Values \code{"colony<i>"} are used for the colonies' \emph{root} cells, where \code{"<i>"} is the colony ID.
+\item \code{"colId"}, as in the \code{cell_list}, but here stored as a character string.
+Value \code{"-1"} is used for the imaginary \emph{root} cells.
+\cr\cr
+NOTE: This attribute is stored iff it exists as component in the elements of the \code{cell_list}.
+}
 }
 \seealso{
 \code{\link{save_tree}} for saving a tree on disc,

@@ -2,7 +2,7 @@
 % Please edit documentation in R/import_oufti.R
 \name{import_oufti}
 \alias{import_oufti}
-\title{Import an \emph{Oufti} file}
+\title{Import \emph{Oufti} data}
 \usage{
 import_oufti(file, pixelR)
 }
@@ -11,12 +11,13 @@ import_oufti(file, pixelR)
 (including the suffix \code{".csv"}) from which the data is to be imported.
 If it does not contain an absolute path, the file name is relative to the current working directory, \code{getwd()}.
 \cr\cr
-NOTE: The components should be separated by \code{/} (not \code{\\}) on Windows.}
+NOTE: The components should be separated by \code{"/"} on Windows.}
 
 \item{pixelR}{The pixel ratio in units of length, a non-zero positive numeric value.}
 }
 \value{
 A named list with the following components:
+\item{col_list}{\code{NULL}}
 \item{cell_list}{A list containing all the cell instants of the movie.
 Each element of the list is a named list with the following components:
 \itemize{
@@ -31,7 +32,6 @@ or \code{NULL} in case no such cells exist
 \item \code{polarity} is a numeric value defining the polarity of the cell
 }
 }
-\item{col_list}{\code{NULL}}
 \item{Nframes}{Number of frames in the movie, a non-zero positive integer value.
 IDs of frames are in the range \code{[1, Nframes]}.}
 \item{Ncols}{Number of colonies in the movie, equal to \code{1}.

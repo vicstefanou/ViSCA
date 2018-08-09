@@ -4,16 +4,17 @@
 \alias{save_tree}
 \title{Save a tree on disc}
 \usage{
-save_tree(tree, savePath = getwd(), prefix = "", sep = "\\t")
+save_tree(tree, path = getwd(), prefix = "", sep = "\\t")
 }
 \arguments{
 \item{tree}{The linegae or division tree to be saved, an object of class \code{"igraph"}.}
 
-\item{savePath}{A character string naming the directory where the \code{"nodes.csv"} and \code{"edges.csv"} files will be saved.
+\item{path}{A character string naming the directory where the \code{"nodes.csv"} and \code{"edges.csv"} files will be saved
+(excluding the last \code{"/"}).
 If it does not contain an absolute path, the files will be saved relative to the current working directory, \code{getwd()}.
 The default value is the current working directory \code{getwd()}.
 \cr\cr
-NOTE: The components should be separated by \code{/} (not \code{\\}) on Windows.}
+NOTE: The components should be separated by \code{"/"} on Windows.}
 
 \item{prefix}{A prefix that will be added to the name of the \code{"nodes.csv"} and \code{"edges.csv"} files,
 a character string.

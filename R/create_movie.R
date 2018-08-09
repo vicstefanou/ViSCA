@@ -62,14 +62,14 @@
 #' and \code{attrC != "generation"}.
 #'
 #' @param savePath  A character string naming the absolute path of the directory
-#' where the generated \code{.png} files will be saved.
+#' where the generated \code{.png} files will be saved (excluding the last \code{"/"}).
 #' The default value is the current working directory \code{getwd()}.
 #' Image files are named as \code{"frame_<i>.png"}, where \code{"<i>"} is the frame ID.
 #' The movie file is named as \code{"movie.mp4"}.
 #' All files will be saved in folder \code{"<attrC>"}
 #' (or \code{"noColor"} in case \code{attrC = ""}), created under the specified directory.
 #' \cr\cr
-#' NOTE: The components should be separated by \code{/} (not \code{\\}) on Windows.
+#' NOTE: The components should be separated by \code{"/"}) on Windows.
 #'
 #' @seealso \code{\link{isSubtree}} for checking if a tree is a subtree of another tree.
 #' @export
@@ -175,7 +175,7 @@ create_movie <- function(overallLT, LT,
       cell_pixels <- cell_list[[cell_list_ID]]$pixelList
       ULcorner <- col_list[[cell_list[[cell_list_ID]]$colId]]$ULcorner
 
-      pixels <- cbind(cell_pixels[,1] + ULcorner[1], cell_pixels[,2] + ULcorner[2])
+      pixels <- cbind(cell_pixels[, 1] + ULcorner[, 1], cell_pixels[, 2] + ULcorner[, 2])
       im[pixels] <- V(overallLT)[cell]$color
 
     }
@@ -189,8 +189,16 @@ create_movie <- function(overallLT, LT,
       if (attrC %in% c("colony", "generation", boolean_attrs)) {
 
         par(mar = c(0, 0, 0, 4.2), bg = "black", fg = "white")
-        plot(NA, xlim = 0:1, ylim = 0:1, bty = "n", axes = 0, xaxs = 'i', yaxs = 'i')
-        rasterImage(EBImage::Image(data = im, colormode = 'Color'), 0, 0, 1, 1)
+
+        # blank plot
+        plot(NA,
+             main = "", xlab = "", ylab = "",
+             xlim = c(0, 1), ylim = c(0, 1),
+             bty = "n", axes = 0, xaxs = 'i', yaxs = 'i')
+
+        rasterImage(EBImage::Image(data = im, colormode = 'Color'),
+                    xleft = 0, ybottom = 0, xright = 1, ytop = 1)
+
 
         whichColors <- sort(unique(vertex_attr(graph = tree, name = attrC, index = colored_cells)))
         plotColorLegend(attr = attrC, whichColors = whichColors, N_colors = NC, size_lab = 0.6)
@@ -201,8 +209,15 @@ create_movie <- function(overallLT, LT,
                         1, 2), nrow = 2, byrow = TRUE), widths = c(10, 1))
 
         par(mar = rep(0, 4), bg = "black", fg = "white")
-        plot(NA, xlim = 0:1, ylim = 0:1, bty = "n", axes = 0, xaxs = 'i', yaxs = 'i')
-        rasterImage(EBImage::Image(data = im, colormode = 'Color'), 0, 0, 1, 1)
+
+        # blank plot
+        plot(NA,
+             main = "", xlab = "", ylab = "",
+             xlim = c(0, 1), ylim = c(0, 1),
+             bty = "n", axes = 0, xaxs = 'i', yaxs = 'i')
+
+        rasterImage(EBImage::Image(data = im, colormode = 'Color'),
+                    xleft = 0, ybottom = 0, xright = 1, ytop = 1)
 
         plotColormap(values = vertex_attr(graph = LT, name = attrC, index = colored_cells),
                      attr = attrC, unit = unitC,
@@ -211,8 +226,15 @@ create_movie <- function(overallLT, LT,
       }
     } else {
       par(mar = rep(0, 4), bg = "black", fg = "white")
-      plot(NA, xlim = 0:1, ylim = 0:1, bty = "n", axes = 0, xaxs = 'i', yaxs = 'i')
-      rasterImage(EBImage::Image(data = im, colormode = 'Color'), 0, 0, 1, 1)
+
+      # blank plot
+      plot(NA,
+           main = "", xlab = "", ylab = "",
+           xlim = c(0, 1), ylim = c(0, 1),
+           bty = "n", axes = 0, xaxs = 'i', yaxs = 'i')
+
+      rasterImage(EBImage::Image(data = im, colormode = 'Color'),
+                  xleft = 0, ybottom = 0, xright = 1, ytop = 1)
     }
 
 

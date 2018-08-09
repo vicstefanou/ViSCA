@@ -42,10 +42,10 @@
 #' \code{"<i>"} is the instant of the cell starting from \code{1}.
 #'
 #' @param savePath  A character string naming the absolute path of the directory
-#' where the cell life images will be saved.
+#' where the cell life images will be saved (excluding the last \code{"/"}).
 #' The default value is the current working directory \code{getwd()}.
 #' \cr\cr
-#' NOTE: The components should be separated by \code{/} (not \code{\\}) on Windows.
+#' NOTE: The components should be separated by \code{"/"} on Windows.
 #'
 #' @export
 #' @import igraph
@@ -88,28 +88,24 @@ create_cell_life <- function(DT, cells = "all",
 
   ######################
 
-  centerImage <- function(image, length, height) {
+  centerImage <- function(image, height, width) {
 
-    if (is.character(image)) {
-      extra_value <- "black"
-    } else { # numeric
-      extra_value <- 0 # <- never used
-    }
+    extra_value <- "black"
 
-    if ((height - dim(image)[2]) %% 2 == 0) {
-      extra_columns_left <- extra_columns_right <- matrix(extra_value, nrow = dim(image)[1], ncol = (height - dim(image)[2]) / 2)
+    if ((width - ncol(image)) %% 2 == 0) {
+      extra_columns_left <- extra_columns_right <- matrix(extra_value, nrow = nrow(image), ncol = (width - ncol(image)) / 2)
     } else {
-      extra_columns_left <- matrix(extra_value, nrow = dim(image)[1], ncol = (height - dim(image)[2]) %/% 2)
-      extra_columns_right <- matrix(extra_value, nrow = dim(image)[1], ncol = (height - dim(image)[2]) %/% 2 + 1)
+      extra_columns_left <- matrix(extra_value, nrow = nrow(image), ncol = (width - ncol(image)) %/% 2)
+      extra_columns_right <- matrix(extra_value, nrow = nrow(image), ncol = (width - ncol(image)) %/% 2 + 1)
     }
 
     centered_im <- cbind(extra_columns_left, image, extra_columns_right)
 
-    if ((length - dim(image)[1]) %% 2 == 0) {
-      extra_rows_up <- extra_rows_down <- matrix(extra_value, nrow = (length - dim(image)[1]) / 2, ncol = height)
+    if ((height - nrow(image)) %% 2 == 0) {
+      extra_rows_up <- extra_rows_down <- matrix(extra_value, nrow = (height - nrow(image)) / 2, ncol = width)
     } else {
-      extra_rows_up <- matrix(extra_value, nrow = (length - dim(image)[1]) %/% 2, ncol = height)
-      extra_rows_down <- matrix(extra_value, nrow = (length - dim(image)[1]) %/% 2 + 1, ncol = height)
+      extra_rows_up <- matrix(extra_value, nrow = (height - nrow(image)) %/% 2, ncol = width)
+      extra_rows_down <- matrix(extra_value, nrow = (height - nrow(image)) %/% 2 + 1, ncol = width)
     }
 
     centered_im <- rbind(extra_rows_up, centered_im, extra_rows_down)
@@ -151,8 +147,8 @@ create_cell_life <- function(DT, cells = "all",
     ######################### find max x,y
 
     colony_list_IDs <- unname(unlist(sapply(cell_list, function(x) x$colId)))[cell_list_IDs]
-    N_length_pixels <- max(unname(unlist(sapply(col_list, function(x) dim(x$colImage)[1])))[colony_list_IDs])
-    N_height_pixels <- max(unname(unlist(sapply(col_list, function(x) dim(x$colImage)[2])))[colony_list_IDs])
+    N_height_pixels <- max(unname(unlist(sapply(col_list, function(x) nrow(x$colImage))))[colony_list_IDs])
+    N_width_pixels <- max(unname(unlist(sapply(col_list, function(x) ncol(x$colImage))))[colony_list_IDs])
 
     #########################
 
@@ -170,13 +166,13 @@ create_cell_life <- function(DT, cells = "all",
       im[im == 1] <- "snow3"
       im[cell_pixels] <- "red"
 
-      centered_im <- centerImage(image = im, length = N_length_pixels, height = N_height_pixels)
+      centered_im <- centerImage(image = im, height = N_height_pixels, width = N_width_pixels)
 
       life[[i]] <- EBImage::Image(data = centered_im, colormode = 'Color')
 
       if (saveT == "sep") {
         png(filename = paste(cell, "_f", first_frame, "_", i, ".png", sep = ""),
-            width = N_length_pixels * 2,
+            width = N_width_pixels * 2,
             height = N_height_pixels * 2)
         EBImage::display(x = life[[i]], method = "raster", all = TRUE)
         dev.off()

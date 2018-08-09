@@ -8,7 +8,8 @@ createAxisLab <- function(attr, unit = "", string = "") {
     if (nchar(attr[2]) == 1) {
       attr <- paste(attr[2], " ", toupper(substr(attr[1], 1, 1)), substr(attr[1], 2, nchar(attr[1])), sep="")
     } else {
-      attr <- paste(toupper(substr(attr[2], 1, 1)), substr(attr[2], 2, nchar(attr[2])), " ", toupper(substr(attr[1], 1, 1)), substr(attr[1], 2, nchar(attr[1])), sep = "")
+      attr <- paste(toupper(substr(attr[2], 1, 1)), substr(attr[2], 2, nchar(attr[2])), " ",
+                    toupper(substr(attr[1], 1, 1)), substr(attr[1], 2, nchar(attr[1])), sep = "")
     }
   } else {
     warning("attr must contain up to one \"_\"\n") ## => LT attributes must not contain "_"
@@ -156,7 +157,9 @@ getCellColorsDot <- function(df, myPlot, tree, attr, unit = "", N_colors = NULL)
         } else {
           myPlot <- myPlot + scale_color_gradientn(colors = c("skyblue", "slateblue4", "darkred"),
                                                    breaks = c(min(values), max(values)),
-                                                   labels = c(format(round(min(values), 3), nsmall = 3), format(round(max(values), 3), nsmall = 3)), # 3 decimal digits precision
+                                                   # 3 decimal digits precision
+                                                   labels = c(format(round(min(values), 3), nsmall = 3),
+                                                              format(round(max(values), 3), nsmall = 3)),
                                                    na.value = "gray30")
         }
 
@@ -213,7 +216,9 @@ plotColorLegend <- function(attr, whichColors = NULL, N_colors, size_lab) {
 
   corners <- par("usr")
 
-  legend(x = corners[2], y = mean(corners[3:4]), cex = size_lab, title = title, legend = legend, lwd = 3, col = colors, yjust = 0.5, bty = "n", xpd = TRUE)
+  legend(x = corners[2], y = mean(corners[3:4]),
+         cex = size_lab, title = title, legend = legend, lwd = 3, col = colors,
+         yjust = 0.5, bty = "n", xpd = TRUE)
 
 }
 
@@ -260,12 +265,16 @@ updateCellInBascaList <- function(x, frame, colony, colId, col_list, pixelRatio,
   x$colony <- colony
   x$colId <- colId # numeric
 
+  x$pixelList <- cbind(x$pixelList[, 2], x$pixelList[, 1]) # (row,col) in colImage
+  x$boundaryPixelList <- cbind(x$boundaryPixelList[, 2], x$boundaryPixelList[, 1]) # (row,col) in colImage
+
+  x$centroid <- matrix(colMeans(x$pixelList), nrow = 1, ncol = 2) #cbind(x$centroid[, 2], x$centroid[, 1]) # (row,col) in colImage
+
   x$distFromCentroid <- norm(x$centroid - col_list[[colId]]$colCentroid, "f") * pixelRatio
 
   colBoundaryPixels <- col_list[[colId]]$colBoundaryPixels
   overlapVector <- paste(x$pixelList[, 1], x$pixelList[, 2], sep = " ") %in% paste(colBoundaryPixels[, 1], colBoundaryPixels[, 2], sep = " ")
   overlapPercent <- sum(overlapVector) / dim(x$pixelList)[1]
-
   if (overlapPercent > 0.66) {
     x$isOnBoundary <- TRUE
   } else {
@@ -292,6 +301,7 @@ updateCellInBascaList <- function(x, frame, colony, colId, col_list, pixelRatio,
 
   x$lengthInPixels <- NULL
   x$widthInPixels <- NULL
+  x$covariance <- NULL
 
   # values from matrix format
   for (attr in names(x)) {
@@ -309,7 +319,7 @@ updateCellInBascaList <- function(x, frame, colony, colId, col_list, pixelRatio,
 
 #' @import igraph
 
-updateCellInBascaLT <- function(LT, cell, cell_list, Ncols) {
+updateCellInBascaLT <- function(LT, cell, cell_list, Ncols, colony) {
 
   cell_list_ID <- as.numeric(cell) - (Ncols + 1)
 
@@ -321,6 +331,8 @@ updateCellInBascaLT <- function(LT, cell, cell_list, Ncols) {
   for (attr in numeric_attrs) {
     if (attr == "colId") {
       V(LT)[cell]$colId <- as.character(cell_list[[cell_list_ID]]$colId)
+    } else if (attr == "colony") {
+      V(LT)[cell]$colony <- colony # correct colony
     } else {
       LT <- set_vertex_attr(graph = LT, name = attr, index = V(LT)[cell]$name, value = unlist(unname(cell_list[[cell_list_ID]][attr])))
     }
@@ -362,13 +374,10 @@ callBascaMatlabExe <- function(Nsplit, cell_list_IDs,
   frameID <- unlist(strsplit(a[1], split = "f"))[2]
   colID <- a[2]
 
-  system(paste(paste(exe_path, "run_mat_correct.sh", sep = "/"), mcr_directory, mat_folder, mat_fileName, cellIDs, frameID, colID, Nsplit))
+  system(paste(paste(exe_path, "run_mat_correct.sh", sep = "/"),
+               mcr_directory, mat_folder, mat_fileName, cellIDs, frameID, colID, Nsplit))
 
   newCellProps <- R.matlab::readMat(paste(mat_folder, "mat_correction.mat", sep = "/"))
-
-  # for (i_cell in 1:dim(newCellProps$cellProps)[3]) {
-  #   newCellProps$cellProps[, , i_cell]$pixelList <- cbind(newCellProps$cellProps[, , i_cell]$pixelList[, 2], newCellProps$cellProps[, , i_cell]$pixelList[, 1])
-  # }
 
   file.remove(paste(mat_folder, "mat_correction.mat", sep = "/"))
 
@@ -411,7 +420,8 @@ getAttrForTitle <- function(attr) {
     if (nchar(attr[2]) == 1) {
       attr <- paste(attr[2], " ", toupper(substr(attr[1], 1, 1)), substr(attr[1], 2, nchar(attr[1])), sep = "")
     } else {
-      attr <- paste(toupper(substr(attr[2], 1, 1)), substr(attr[2], 2, nchar(attr[2])), " ", toupper(substr(attr[1], 1, 1)), substr(attr[1], 2, nchar(attr[1])), sep = "")
+      attr <- paste(toupper(substr(attr[2], 1, 1)), substr(attr[2], 2, nchar(attr[2])), " ",
+                    toupper(substr(attr[1], 1, 1)), substr(attr[1], 2, nchar(attr[1])), sep = "")
     }
   }
 
@@ -469,18 +479,22 @@ findNbins <- function(values, Nbins) {
 checkField <- function(myList, fieldName) {
 
   m <- ""
-  vals <- unlist(unname(sapply(myList, function(x) x[fieldName])))
+  vals <- unname(sapply(myList, function(x) x[fieldName]))
 
-  if (is.null(vals)) {
+  if (is.null(unlist(vals))) {
     m <- paste("Component \"", fieldName, "\" does not exist\n", sep = "")
   }
 
-  if (length(which(is.na(vals))) != 0) {
-    m <- paste("NA values in component \"", fieldName, "\"\n", sep = "")
+  if (fieldName != "daughterIds") {
+    if (length(which(sapply(vals, function(x) is.null(x)) == TRUE)) != 0) {
+      m <- paste("Missing values in component \"", fieldName, "\"\n", sep = "")
+    }
   }
 
-  if (length(vals) != length(myList)) {
-    m <- paste("Missing values in component \"", fieldName, "\"\n", sep = "")
+  if (!is.matrix(vals[[1]]) & fieldName != "daughterIds") { # single value
+    if (length(which(sapply(vals, function(x) is.na(x)) == TRUE)) != 0) {
+      m <- paste("NA values in component \"", fieldName, "\"\n", sep = "")
+    }
   }
 
   return(m)
@@ -489,39 +503,86 @@ checkField <- function(myList, fieldName) {
 
 #################################################################################################
 
-checkColList <- function(col_list) {
+checkColList <- function(col_list, frameH, frameW) {
+
+  # colName is the name of the colony instant, a character string in the format "f<frame>_c<colony>",
+  # "<frame>" and "<colony>" is the ID of the frame and colony (in the frame) of the colony instant, respectively.
 
   if ((m <- checkField(myList = col_list, fieldName = "colName")) != "") {
     stop(paste("colony list:", m))
   } else {
-    vals <- unlist(unname(sapply(col_list, function(x) x$colName)))
+    vals <- sapply(col_list, function(x) x$colName)
     if (length(grep(pattern = "^f\\d+_c\\d+$", x = vals, value=FALSE)) != length(vals)) {
       stop("colony list: Wrong values in component \"colName\"\n")
     }
   }
 
+  # prev_colName is a vector of character strings containing the colName
+  # of the corresponding colony instant(s) in the previous frame.
+  # For colony instants that do not have a corresponding colony instant in the previous frame, this is equal to "f0_c0".
+
   if ((m <- checkField(myList = col_list, fieldName = "prev_colName")) != "") {
     stop(paste("colony list:", m))
   } else {
     vals <- unlist(unname(sapply(col_list, function(x) x$prev_colName)))
-    if (!(vals %in% c(unlist(unname(sapply(col_list, function(x) x$colName))), "f0_c0"))) {
+    if (length(setdiff(vals, c(unlist(unname(sapply(col_list, function(x) x$colName))), "f0_c0"))) != 0) {
       stop("colony list: Wrong values in component \"prev_colName\"\n")
     }
   }
 
+  # next_colName is a character string containing the colName
+  # of the corresponding colony instant in the next frame.
+  # For colony instants that do not have a corresponding colony instant in the next frame, this is equal to "f00_c0".
+
   if ((m <- checkField(myList = col_list, fieldName = "next_colName")) != "") {
     stop(paste("colony list:", m))
   } else {
-    vals <- unlist(unname(sapply(col_list, function(x) x$next_colName)))
-    if (!(vals %in% c(unlist(unname(sapply(col_list, function(x) x$colName))), "f00_c0"))) {
+    vals <- sapply(col_list, function(x) x$next_colName)
+    if (length(setdiff(vals, c(unlist(unname(sapply(col_list, function(x) x$colName))), "f00_c0"))) != 0) {
       stop("colony list: Wrong values in component \"next_colName\"\n")
     }
   }
 
-  # if (checkField(myList = col_list, fieldName = "ULcorner") == "" &
-  #     checkField(myList = col_list, fieldName = "colImage") == "") {
+  ####################### not necessary ##################################################################
+  # colImage is the mask of the box surrounding the colony instant, a matrix of 0 and 1.
+  # 1s denote the pixels of cells and 0s the background pixels.
   #
-  # }
+  # ULcorner is an 1x2 matrix of non-zero integer values
+  # denoting the upper-left pixel of the box surrounding the colony instant in global (frame) coordinates.
+  # The first integer represents the row and the second the column of the pixel.
+
+  if ((m1 <- checkField(myList = col_list, fieldName = "colImage")) == "") {
+    if ((m2 <- checkField(myList = col_list, fieldName = "ULcorner")) != "") {
+      stop(paste("colony list: Component \"colImage\" exists\n", m2))
+    } else {
+
+      a <- sapply(col_list, function(x) {
+        x$ULcorner[1, 1] >= 1 &
+          x$ULcorner[1, 2] >= 1 &
+          x$ULcorner[1, 1] + nrow(x$colImage) - 1 <= frameH &
+          x$ULcorner[1, 2] + ncol(x$colImage) - 1 <= frameW
+          })
+
+      if (length(which(a == FALSE)) != 0) {
+        stop("colony list: Wrong values in component \"ULcorner\" or
+             wrong dimensions of component \"colImage\"\n
+             Out of frame boundaries")
+      }
+
+      a <- sapply(col_list, function(x) length(which((x$colImage %in% c(0, 1)) == FALSE)))
+      if (length(which(a != 0)) != 0) {
+        stop("colony list: Wrong values (not 0 or 1) in component \"colImage\"\n")
+      }
+
+    }
+  } else if (m1 == "Component \"colImage\" does not exist\n") {
+    if (checkField(myList = col_list, fieldName = "ULcorner") == "") {
+      stop(paste("colony list:", m1,
+                 "Component \"ULcorner\" should be omitted\n"))
+    }
+  } else {
+    stop(paste("colony list:", m1))
+  }
 
 }
 
@@ -529,46 +590,98 @@ checkColList <- function(col_list) {
 
 checkCellList <- function(cell_list, col_list) {
 
+  # cellName is the name of the cell, a character string in the format \code{"<cellId>_f<frame>"}.
+
   if ((m <- checkField(myList = cell_list, fieldName = "cellName")) != "") {
     stop(paste("cell list:", m))
   } else {
-    vals <- unlist(unname(sapply(cell_list, function(x) x$cellName)))
-    if (length(grep(pattern = "_f\\d+$", x = vals, value=FALSE)) != length(vals)) {
+    vals <- sapply(cell_list, function(x) x$cellName)
+    if (length(grep(pattern = "_f\\d+$", x = vals, value = FALSE)) != length(vals)) {
       stop("cell list: Wrong values in component \"cellName\"\n")
     }
   }
 
+  # frame is the ID of the frame of the cell, a non-zero positive integer number.
+
   if ((m <- checkField(myList = cell_list, fieldName = "frame")) != "") {
     stop(paste("cell list:", m))
   } else {
-    ###
+    vals <- sapply(cell_list, function(x) x$frame)
+    if (class(vals) != "integer") {
+      stop("cell list: Values in component \"frame\" are not integers\n")
+    }
+    if (length(which(vals <= 0)) != 0) {
+      stop("cell list: Wrong values in component \"frame\"\n")
+    }
+    my_cellNames <- sapply(cell_list, function(x) x$cellName)
+    if (!all.equal(vals, unname(sapply(my_cellNames, function(x) as.numeric(unlist(strsplit(x, split = "_f"))[2]))))) {
+      stop("cell list: Values in component \"frame\" do not correspond to \"_f<frame>\" of component \"cellName\"\n")
+    }
   }
+
+  # colony is the ID of the colony of the cell in the frame, a non-zero positive integer number.
 
   if ((m <- checkField(myList = cell_list, fieldName = "colony")) != "") {
     stop(paste("cell list:", m))
   } else {
-    ###
+    vals <- sapply(cell_list, function(x) x$colony)
+    if (class(vals) != "integer") {
+      stop("cell list: Values in component \"colony\" are not integers\n")
+    }
+    if (length(which(vals <= 0)) != 0) {
+      stop("cell list: Wrong values in component \"colony\"\n")
+    }
   }
+
+  # daughterIds is a vector of character strings containing the cellName
+  # of the linked cell(s) in the next frame,
+  # or NULL in case no such cells exist.
 
   if ((m <- checkField(myList = cell_list, fieldName = "daughterIds")) == "Component \"daughterIds\" does not exist\n") {
     stop(paste("cell list:", m))
   } else {
-    vals <- unlist(unname(sapply(cell_list, function(x) x$daughterIds)))
-    if (!(vals %in% unlist(unname(sapply(cell_list, function(x) x$cellName))))) {
-      stop("cell list: Wrong values in component \"daughterIds\"\n")
-    }
-    if (length(which(sapply(cell_list, function(x) length(x$daughterIds) > 2) == TRUE)) != 0) {
-      stop("cell list: More than 2 elements in values of component \"daughterIds\"\n")
+    # vals <- unlist(unname(sapply(cell_list, function(x) x$daughterIds)))
+    # if (length(setdiff(vals, unlist(unname(sapply(cell_list, function(x) x$cellName))))) != 0) {
+    #   stop("cell list: Wrong values in component \"daughterIds\"\n")
+    # }
+    # if (length(which(sapply(cell_list, function(x) length(x$daughterIds) > 2) == TRUE)) != 0) {
+    #   stop("cell list: More than 2 elements in values of component \"daughterIds\"\n")
+    # }
+    cells <- unlist(unname(sapply(cell_list, function(x) x$cellName)))
+    for (i_cell in 1:length(cell_list)) {
+      if (!is.null(cell_list[[i_cell]]$daughterIds)) {
+        if (length(setdiff(cell_list[[i_cell]]$daughterIds, cells)) != 0) {
+          warning(paste("cell list: Wrong values in component \"daughterIds\" of cell", i_cell, "\n"))
+        }
+        if (length(cell_list[[i_cell]]$daughterIds) > 2) {
+          warning(paste("cell list: More than 2 elements in values of component \"daughterIds\" of cell", i_cell, "\n"))
+        }
+      }
     }
   }
 
+  # colId is a pointer to the corresponding colony instant of the cell in the col_list,
+  # a non-zero positive integer value.
+	# Colonies that entered the field of view at a time point and did not exist from the beginning of the movie
+  # (i.e. from the first frame)
+	# should not have tracked cells, until they merge (if this is the case) with another existing colony.
+	# This means that no object should point to such colony instants.
 
   if (!is.null(col_list)) {
     if ((m <- checkField(myList = cell_list, fieldName = "colId")) != "") {
       stop(paste("colony list is imported\n
                  cell list:", m))
     } else {
-      ###
+      vals <- sapply(cell_list, function(x) x$colId)
+      if (length(setdiff(vals, c(1:length(col_list)))) != 0) {
+        stop("cell list: Values in component \"colId\" do not point to existing colony instants\n")
+      }
+      my_colNames <- sapply(col_list, function(x) x$colName)[vals]
+      my_frames <- sapply(cell_list, function(x) x$frame)
+      my_cols <- sapply(cell_list, function(x) x$colony)
+      if (!all.equal(my_colNames, paste("f", my_frames, "_c", my_cols, sep = ""))) {
+        stop("cell list: Values in component \"colId\" point to wrong colony instants\n")
+      }
     }
   } else {
     if (checkField(myList = cell_list, fieldName = "colId") == "") {
@@ -577,12 +690,34 @@ checkCellList <- function(cell_list, col_list) {
     }
   }
 
+  # pixelList is a Nx2 matrix of non-zero integer values
+  # denoting the pixels of the cell in colony coordinates
+  # (i.e. relative to the colImage of the colId^th element in the col_list).
+  # Each one of the N rows indicates a pixel of the cell.
+  # The first column represents the row and the second the column of the pixel.
 
   if (!is.null(col_list)) {
     if ((m <- checkField(myList = col_list, fieldName = "colImage")) == "") {
       if (checkField(myList = cell_list, fieldName = "pixelList") == "") {
-        ###
-        # centroid
+        for (i_cell in 1:length(cell_list)) {
+          if (ncol(cell_list[[i_cell]]$pixelList) != 2) {
+            stop("cell list: Wrong number of columns in component \"pixelList\"\n")
+          }
+          if (length(which(!(cell_list[[i_cell]]$pixelList[, 1] %in% c(1:nrow(col_list[[cell_list[[i_cell]]$colId]]$colImage))))) != 0 ||
+              length(which(!(cell_list[[i_cell]]$pixelList[, 2] %in% c(1:ncol(col_list[[cell_list[[i_cell]]$colId]]$colImage))))) != 0) {
+            stop("cell list: Pixels in component \"pixelList\" are out of the dimensions of component \"colImage\" in colony list\n")
+          }
+          vals <- col_list[[cell_list[[i_cell]]$colId]]$colImage[cell_list[[i_cell]]$pixelList]
+          if (length(unique(vals)) == 1) {
+            if (unique(vals) != 1) {
+              warning(paste("cell list: Pixels in component \"pixelList\" of cell", i_cell, "do not denote cells of the colony\n"))
+            }
+          } else {
+            warning(paste("cell list: Pixels in component \"pixelList\" of cell", i_cell, "do not denote cells of the colony\n"))
+          }
+          # compute and store centroid
+          cell_list[[i_cell]]$centroid <- matrix(colMeans(cell_list[[i_cell]]$pixelList), nrow = 1, ncol = 2)
+        }
       }
     } else {
       if (checkField(myList = cell_list, fieldName = "pixelList") == "") {
@@ -596,4 +731,32 @@ checkCellList <- function(cell_list, col_list) {
               cell list: Component \"pixelList\" is useless and should be ommited\n")
     }
   }
+
+  ##### rest attributes
+
+  attributes <- unique(unlist(sapply(cell_list, function(x) names(x))))
+  attributes <- attributes[!(attributes %in%
+                               c("cellName", "frame", "colony", "daughterIds", "colId", "pixelList", "centroid", "boundaryPixelList"))]
+
+  for (attr in attributes) {
+    m <- checkField(myList = cell_list, fieldName = attr)
+    if (!is.matrix(unname(cell_list[[1]][attr][[1]]))) { # vector or value
+      vals <- unname(unlist(sapply(cell_list, function(x) x[attr])))
+      if (length(vals) != length(cell_list)) { # vector
+        warning(paste("cell list: Component \"", attr, "\" is a vector and should be ommited\n", sep = ""))
+      } else { # value
+        if (m != "") {
+          stop(paste("cell list:", m))
+        }
+        if (is.character(vals)) {
+          warning(paste("cell list: Component \"", attr, "\" is not numeric or boolean and should be ommited\n", sep = ""))
+        }
+      }
+    } else {
+      warning(paste("cell list: Component \"", attr, "\" is a matrix and should be ommited\n", sep = ""))
+    }
+  }
+
+  return(cell_list = cell_list)
+
 }

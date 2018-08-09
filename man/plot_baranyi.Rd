@@ -46,11 +46,11 @@ The default value is \code{2000}.}
 \item{\code{res}}{The resolution of the image file in \emph{pixels} per \emph{inch} (ppi), a non-zero positive integer value.
 The smaller this value, the larger the plot area in inches, and the smaller the text relative to the graph itself.
 The default value is \code{300}.}
-\item{\code{path}}{A character string naming the directory where the image file will be saved.
+\item{\code{path}}{A character string naming the directory where the image file will be saved (excluding the last \code{"/"}).
 If it does not contain an absolute path, the image file will be saved relative to the current working directory \code{getwd()}.
 The default value is the current working directory \code{getwd()}.
 \cr\cr
-NOTE: The components should be separated by \code{/} (not \code{\\}) on Windows.}
+NOTE: The components should be separated by \code{"/"} on Windows.}
 \item{\code{name}}{The image file name, a character string.
 The suffix \code{".png"} is added automatically.
 The default value is \code{"my_baranyi"}.}

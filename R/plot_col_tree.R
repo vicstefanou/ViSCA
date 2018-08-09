@@ -44,11 +44,11 @@
 #' \item{\code{res}}{The resolution of the image file in \emph{pixels} per \emph{inch} (ppi), a non-zero positive integer value.
 #' The smaller this value, the larger the plot area in inches, and the smaller the text relative to the graph itself.
 #' The default value is \code{250}.}
-#' \item{\code{path}}{A character string naming the directory where the image file will be saved.
+#' \item{\code{path}}{A character string naming the directory where the image file will be saved (excluding the last \code{"/"}).
 #' If it does not contain an absolute path, the image file will be saved relative to the current working directory \code{getwd()}.
 #' The default value is the current working directory \code{getwd()}.
 #' \cr\cr
-#' NOTE: The components should be separated by \code{/} (not \code{\\}) on Windows.}
+#' NOTE: The components should be separated by \code{"/"}) on Windows.}
 #' \item{\code{name}}{The image file name, a character string.
 #' The suffix \code{".png"} is added automatically.
 #' The default value is \code{"my_col_tree"}.}
@@ -78,7 +78,7 @@ plot_col_tree <- function(col_list, Ncols,
   for (i_colony in 1:length(col_list)) {
     next_col_Name <- col_list[[i_colony]]$next_colName
     next_col_Id <- which(sapply(col_list, function(x) x$colName == next_col_Name))
-    if (length(next_col_Id) != 0) {  # next col found (next col = "f<Nframes+1>_c0" for last frame colonies in BaSCA)
+    if (length(next_col_Id) != 0) {  # next col found
       edges <- rbind(edges, c(i_colony + 1, next_col_Id + 1))
     }
   }

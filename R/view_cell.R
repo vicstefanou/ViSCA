@@ -65,16 +65,17 @@ view_cell <- function(LT, cells,
     im[cell_pixels] <- "red"
 
     oldPar <- par()
-    par(mar = c(0.5, 0.5, 2, 0.5))
+    par(mar = c(0, 0, 2, 0))
 
     # blank plot
     plot(NA,
          main = paste("cell \"", cell, "\"", sep = ""),
          xlab = "", ylab = "",
-         xlim = 0:1, ylim = 0:1,
+         xlim = c(0, 1), ylim = c(0, 1),
          bty = "n", axes = 0, xaxs = 'i', yaxs = 'i')
 
-    rasterImage(EBImage::Image(data = im, colormode = 'Color'), 0, 0, 1, 1)
+    rasterImage(EBImage::Image(data = im, colormode = 'Color'),
+                xleft = 0, ybottom = 0, xright = 1, ytop = 1)
 
     par(mar = oldPar$mar)
 

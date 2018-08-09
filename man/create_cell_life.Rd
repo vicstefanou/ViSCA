@@ -33,10 +33,10 @@ in \emph{left-to-right, top-to-bottom} order, named as \code{"<cell>_f<first_fra
 \code{"<i>"} is the instant of the cell starting from \code{1}.}
 
 \item{savePath}{A character string naming the absolute path of the directory
-where the cell life images will be saved.
+where the cell life images will be saved (excluding the last \code{"/"}).
 The default value is the current working directory \code{getwd()}.
 \cr\cr
-NOTE: The components should be separated by \code{/} (not \code{\\}) on Windows.}
+NOTE: The components should be separated by \code{"/"} on Windows.}
 }
 \description{
 Creates the life images of a set of given cells.
