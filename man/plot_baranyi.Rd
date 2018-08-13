@@ -61,10 +61,10 @@ A dataframe with the following columns:
 \enumerate{
 \item \code{colony} is the colony ID (a non-zero positive integer value)
 or \code{-2} in case \code{cols = -2}.
-\item \code{lag} is the \emph{\lambda} parameter (\emph{lag time})
+\item \code{lag} is the \emph{\ifelse{html}{\out{lambda}}{\eqn{\lambda}}} parameter (\emph{lag time})
 of the \emph{Baranyi and Roberts} model in \emph{hours} (a non-zero positive numeric value)
 or \code{NA} in case the model failed to be fitted or \code{colony} has only cells which have not been divided.
-\item \code{mumax} is the \emph{mumax} parameter (\emph{maximum specific growth rate})
+\item \code{mumax} is the \emph{\ifelse{html}{\out{mumax}}{\eqn{\mu_{max}}}} parameter (\emph{maximum specific growth rate})
 of the \emph{Baranyi and Roberts} model in \emph{1/hour} (a non-zero positive numeric value)
 or \code{NA} in case the model failed to be fitted or \code{colony} has only cells which have not been divided.
 }

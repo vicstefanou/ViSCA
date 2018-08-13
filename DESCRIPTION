@@ -1,10 +1,10 @@
 Package: ViSCA
 Type: Package
-Title: Cell-movie Analysis and Visualization
+Title: Cell-Movie Analysis and Visualization
 Version: 0.1.0
 Author: Victoria Stefanou
 Maintainer: Victoria Stefanou <vic.stefanou@gmail.com>
-Description: Routines for analysis of cell-movies at single-cell, colony and population level, visualization of lineage and division trees, tracking errors correction and movie creation.
+Description: Routines for analysis of cell-movies at single-cell, colony and population level, visualization of lineage and division trees, tracking errors' correction and movie creation.
 Depends: R (>= 3.5.1), igraph (>= 1.2.1)
 Imports: data.table (>= 1.11.4), ggplot2 (>= 3.0.0),
     graphics, grDevices, stats, utils, 

@@ -52,10 +52,10 @@ Plots the colonies' lineage tree.
 }
 \section{Prerequisites}{
 
-This function can be used by \emph{BaSCA} or \emph{SuperSegger} users,
-importing the data with \code{\link{import_basca}} or \code{\link{import_ss}}, respectively.
+This function can be used by \emph{BaSCA} users, importing the data with \code{\link{import_basca}}.
 \cr\cr
-Users of \emph{Oufti} who imported the data with \code{\link{import_oufti}}
+Users of \emph{Oufti} or \emph{SuperSegger} 
+who imported the data with \code{\link{import_oufti}} or \code{\link{import_ss}}, respectively,
 are \bold{excluded} from using this function, as no colony list was returned.
 \cr\cr
 For other users, it is necessary that a colony list was imported with \code{\link{import_json}}.

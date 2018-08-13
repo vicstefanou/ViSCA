@@ -29,9 +29,6 @@
 #' \cr\cr
 #' NOTE: This key-value pair is not necessary unless the key \code{colImage} is contained (an error is produced).
 #' }
-#' \cr\cr
-#'
-#'
 #' The \code{file_cells} must be a JSON array of objects.
 #' Each object denotes a cell instant of the movie.
 #' Key-value pair(s) denoting numeric or boolean attribute(s) should be contained in every object.
@@ -59,14 +56,14 @@
 #' \item \code{pixelList} is a JSON array of arrays.
 #' Each element of the array is a JSON array of 2 non-zero integer values,
 #' indicating a pixel of the cell in colony coordinates
-#' (i.e. relative to the \code{colImage} key of the \code{colId}^th object in \code{file_cols}).
+#' (i.e. relative to the \code{colImage} key of the \code{\ifelse{html}{\out{colId<sup>th</sup>}}{\eqn{colId^{th}}}}
+#' object in \code{file_cols}).
 #' The first value represents the row and the second the column of the pixel.
 #' \cr\cr
 #' NOTE: This key-value pair is not necessary.
 #' It should be omitted if \code{file_cols = NULL} or if objects in \code{file_cols} do not contain the key \code{colImage}
 #' (a warning is produced).
 #' }
-#'
 #'
 #' @param file_cells,file_cols Character strings naming the \code{.json} files
 #' (including the suffix \code{".json"}) containing all the cell and colony instants of the movie, respectively,
@@ -94,7 +91,8 @@
 #' as the \emph{mean} of the \code{pixelList} by column.
 #' \code{centroid} is an 1x2 matrix of non-zero numeric values
 #' denoting the centroid (geometric center) of the cell in colony coordinates
-#' (i.e. relative to the \code{colImage} of the \code{colId}^th element in the \code{col_list}).}
+#' (i.e. relative to the \code{colImage} of the \code{\ifelse{html}{\out{colId<sup>th</sup>}}{\eqn{colId^{th}}}}
+#' element in the \code{col_list}).}
 #' \item{Nframes}{Number of frames in the movie, a non-zero positive integer value.
 #' IDs of frames are in the range \code{[1, Nframes]}.}
 #' \item{Ncols}{Number of colonies in the movie, a non-zero positive integer value.

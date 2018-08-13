@@ -7,17 +7,17 @@
 #' The rest cells of the colony are marked as white.
 #'
 #' @section Prerequisites:
-#' This function can be used by \emph{BaSCA} or \emph{SuperSegger} users,
-#' importing the data with \code{\link{import_basca}} or \code{\link{import_ss}}, respectively.
+#' This function can be used by \emph{BaSCA} users, importing the data with \code{\link{import_basca}}.
+#' \cr\cr
+#' Users of \emph{Oufti} or \emph{SuperSegger} 
+#' who imported the data with \code{\link{import_oufti}} or \code{\link{import_ss}}, respectively,
+#' are \bold{excluded} from using this function, as no colony list was returned.
 #' \cr\cr
 #' If \code{\link{import_json}} was used for importing the data,
 #' it is necessary that cell list elements have the \code{pixelList} and \code{colId} components
 #' and colony list elements have the \code{colImage} component.
 #' See \code{\link{import_json}} for more details.
 #' In other case, this function cannot be used (throws an error).
-#' \cr\cr
-#' Users of \emph{Oufti} who imported the data with \code{\link{import_oufti}}
-#' are also \bold{excluded} from using this function, as no colony list was returned.
 #'
 #' @param LT The lineage tree where the cells specified in \code{cells} belong, an object of class \code{"igraph"}.
 #' @param cells The labels of the cells in the \code{LT} to be viewed, a vector of character strings.

@@ -18,10 +18,10 @@ except for \code{"colony"}, \code{"generation"}, \code{"frame"} and \code{"age"}
 \item{model}{A character string naming the growth model to be fitted:
 \itemize{
 \item \code{"lin"} for fitting a \emph{linear} model
-\code{y = a*t + b}
+\code{\ifelse{html}{\out{y = at + b}}{\eqn{y = a \cdot t + b}}}
 using the \emph{linear least squares} method provided by \code{\link[stats]{lm}}
 \item \code{"exp"} for fitting an \emph{exponential} model
-\code{y = y0*e^(kt)}
+\code{\ifelse{html}{\out{y = y<sub>0</sub> e<sup>kt</sup>}}{\eqn{y = y_{0} \cdot e^{kt}}}}
 using the \emph{non-linear least squares} method provided by \code{\link[stats]{nls}}
 }
 where \code{y} represents the \code{attr} and \code{t} the time in \emph{hours} (starting from \code{0}).}

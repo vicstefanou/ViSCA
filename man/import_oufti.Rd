@@ -11,7 +11,11 @@ import_oufti(file, pixelR)
 (including the suffix \code{".csv"}) from which the data is to be imported.
 If it does not contain an absolute path, the file name is relative to the current working directory, \code{getwd()}.
 \cr\cr
-NOTE: The components should be separated by \code{"/"} on Windows.}
+NOTE: The components should be separated by \code{"/"} on Windows.
+\cr\cr
+Before using this function, the user has to open the \code{.csv} file in a text editor and
+manually delete or comment (by adding the character \code{"\%"} at the beginning)
+all lines of the file until the line with the \code{"\% parameter values"} string.}
 
 \item{pixelR}{The pixel ratio in units of length, a non-zero positive numeric value.}
 }

@@ -13,20 +13,17 @@
 #' By default, each single-cell growth curve is randomly colored.
 #' \cr\cr
 #' The second plot depicts the average growth curve of the group, +/- one standard deviation.
-#' The following curves are drawn:
+#' When \code{model = "lin"}, the following curves are drawn:
 #' \itemize{
-#' \item When \code{model = "lin"}:
-#' \itemize{
-#' \item \code{y = a_mean * t + b_mean}
-#' \item \code{y = (a_mean + a_sd) * t + (b_mean + b_sd)}
-#' \item \code{y = (a_mean - a_sd) * t + (b_mean - b_sd)}
+#' \item \code{\ifelse{html}{\out{y = aMean * t + bMean}}{\eqn{y = aMean \cdot t + bMean}}}
+#' \item \code{\ifelse{html}{\out{y = (aMean + aSD) * t + (bMean + bSD)}}{\eqn{y = (aMean + aSD) \cdot t + (bMean + bSD)}}}
+#' \item \code{\ifelse{html}{\out{y = (aMean - aSD) * t + (bMean - bSD)}}{\eqn{y = (aMean - aSD) \cdot t + (bMean - bSD)}}}
 #' }
-#' \item When \code{model = "exp"}:
+#' When \code{model = "exp"}, the following curves are drawn:
 #' \itemize{
-#' \item \code{y = y0_mean * e^(k_mean * t)}
-#' \item \code{y = (y0_mean + y0_sd) * e^((k_mean + k_sd) * t)}
-#' \item \code{y = (y0_mean - y0_sd) * e^((k_mean - k_sd) * t)}
-#' }
+#' \item \code{\ifelse{html}{\out{y = y0Mean * e<sup>kMean * t</sup>}}{\eqn{y = y0Mean \cdot e^{kMean \cdot t}}}}
+#' \item \code{\ifelse{html}{\out{y = (y0Mean + y0SD) * e<sup>(kMean + kSD) * t</sup>}}{\eqn{y = (y0Mean + y0SD) \cdot e^{(kMean + kSD) \cdot t}}}}
+#' \item \code{\ifelse{html}{\out{y = (y0Mean - y0SD) * e<sup>(kMean - kSD) * t</sup>}}{\eqn{y = (y0Mean - y0SD) \cdot e^{(kSD - kSD) \cdot t}}}}
 #' }
 #' The parameters of these curves are computed based on the corresponding parameters of the single-cell growth curves.
 #' See the \emph{Value} field for more details.
@@ -122,47 +119,44 @@
 #' The suffix \code{".png"} is added automatically.
 #' The default value is \code{"my_growth_attr_fit"}.}
 #' }
-
-#' @return A dataframe with the following columns:
-#' \itemize{
-#' \item When \code{model = "lin"}:
+#'
+#' @return
+#' When \code{model = "lin"}, a dataframe with the following columns is returned:
 #' \enumerate{
 #' \item \code{group} is the ID of the group (a positive integer value)
 #' or \code{-2} in case \code{grouped = "pop"}
 #' \item \code{Ncells} is the number of cells, a positive integer value
-#' \item \code{a_mean} is the \emph{mean} of \code{"<attr>_a"}
+#' \item \code{aMean} is the \emph{mean} of \code{"<attr>_a"}
 #' (a non-zero positive numeric value in units of \code{attr} per \emph{hour}),
 #' or \code{NA} in case \code{Ncells = 0}
-#' \item \code{a_sd} is the \emph{standard deviation} of \code{"<attr>_a"}
+#' \item \code{aSD} is the \emph{standard deviation} of \code{"<attr>_a"}
 #' (a non-zero positive numeric value in units of \code{attr} per \emph{hour}),
 #' or \code{NA} in case \code{Ncells = 0} or \code{Ncells = 1}
-#' \item \code{b_mean} is the \emph{mean} of \code{"<attr>_b"}
+#' \item \code{bMean} is the \emph{mean} of \code{"<attr>_b"}
 #' (a positive numeric value in units of \code{attr})
 #' or \code{NA} in case \code{Ncells = 0}
-#' \item \code{b_sd} is the \emph{standard deviation} of \code{"<attr>_b"}
+#' \item \code{bSD} is the \emph{standard deviation} of \code{"<attr>_b"}
 #' (a positive numeric value in units of \code{attr})
 #' or \code{NA} in case \code{Ncells = 0} or \code{Ncells = 1}
 #' }
-#' \item When \code{model = "exp"}:
+#' When \code{model = "exp"}, a dataframe with the following columns is returned:
 #' \enumerate{
 #' \item \code{group} is the ID of the group (a positive integer value)
 #' or \code{-2} in case \code{grouped = "pop"}
 #' \item \code{Ncells} is the number of cells, a positive integer value
-#' \item \code{k_mean} is the \emph{mean} of \code{"<attr>_k"}
+#' \item \code{kMean} is the \emph{mean} of \code{"<attr>_k"}
 #' (a non-zero positive numeric value in units of \code{attr} per \emph{hour}),
 #' or \code{NA} in case \code{Ncells = 0}
-#' \item \code{k_sd} is the \emph{standard deviation} of \code{"<attr>_k"}
+#' \item \code{kSD} is the \emph{standard deviation} of \code{"<attr>_k"}
 #' (a non-zero positive numeric value in units of \code{attr} per \emph{hour}),
 #' or \code{NA} in case \code{Ncells = 0} or \code{Ncells = 1}
-#' \item \code{y0_mean} is the \emph{mean} of \code{"<attr>_0"}
+#' \item \code{y0Mean} is the \emph{mean} of \code{"<attr>_0"}
 #' (a non-zero positive numeric value in units of \code{attr})
 #' or \code{NA} in case \code{Ncells = 0}
-#' \item \code{y0_sd} is the \emph{standard deviation} of \code{"<attr>_0"}
+#' \item \code{y0SD} is the \emph{standard deviation} of \code{"<attr>_0"}
 #' (a non-zero positive numeric value in units of \code{attr})
 #' or \code{NA} in case \code{Ncells = 0} or \code{Ncells = 1}
 #' }
-#' }
-#' \cr\cr
 #' For groups with \code{Ncells = 0}, no plot of first or second type is generated.
 #' For groups with \code{Ncells = 1}, no plot of second type is generated.
 #' In case no cells exist, no plot is generated and \code{NULL} is returned.
@@ -628,9 +622,9 @@ plot_growth_attr_fit <- function(DT, LT,
   }
 
   if (model == "linear") {
-    colnames(myData) <- c("group", "Ncells", "a_mean", "a_sd", "b_mean", "b_sd")
+    colnames(myData) <- c("group", "Ncells", "aMean", "aSD", "bMean", "bSD")
   } else { # model == "exponential"
-    colnames(myData) <- c("group", "Ncells", "k_mean", "k_sd", "y0_mean", "y0_sd")
+    colnames(myData) <- c("group", "Ncells", "kMean", "kSD", "y0Mean", "y0SD")
   }
 
   return(myData)

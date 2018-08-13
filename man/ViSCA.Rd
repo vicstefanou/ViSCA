@@ -22,10 +22,11 @@ such as \emph{SuperSegger} and \emph{Oufti}.
 \section{Data import}{
 
 ViSCA supports various input file formats for the analyzed cell-movies.
+\cr\cr
 Use \code{\link{import_basca}}, \code{\link{import_oufti}} or \code{\link{import_ss}}
-to import files exported by the named software.
+to import data exported by the named software.
 These functions automatically convert the input file(s) into a cell list (and colony list),
-containing all the cell instants (segmented cells) and colony instants of the movie, respectively.
+containing all the cell instants (and colony instants) of the movie, respectively.
 \cr\cr
 Such structures can be also directly imported from custom-made \code{.json} files,
 provided that they have the appropriate format.
@@ -42,7 +43,7 @@ A continuous segment (sequence) of LT nodes between two successive cell division
 If one reduces LT cell segments down to a single node,
 he obtains the Forest of Division Trees (FDT) data structure,
 capturing only each cell’s division event and summarizing its lifespan.
-A lineage tree (DT) node represents a cell (i.e. cell at its full lifespan).
+A division tree (DT) node represents a cell (i.e. cell at its full lifespan).
 See \code{\link{createFDT}} for details.
 \cr\cr
 These tree data structures are objects of class \code{"igraph"} and are the core structures of the package.
@@ -55,14 +56,22 @@ Single-cell attributes are divided into two broad categories:
 \item cell instant attributes, that may change value at each time point.
 These attributes are extracted by the software, loaded into the cell list and
 finally stored as node attributes in the FLT by \code{\link{createFLT}}.
+\cr\cr
+Some other values as also stored as node attributes in the FLT when
+\code{\link{add_attr_roc}} or \code{\link{createFDT}} are called.
+See the documentation of each function for more details.
 \item cell life attributes characterize a cell’s whole lifespan.
 These attributes are estimated by \code{\link{createFDT}} and are stored as node attributes in the FDT.
+\cr\cr
+Some other values as also stored as node attributes in the FDT
+when \code{\link{add_attr_growth_fit_pars}} is called.
+See the documentation of the function for more details.
 }
 }
 
 \section{Analytics}{
 
-The package allows users to perform statistical analysis of single-cell attributes at multiple levels of organization
+ViSCA allows users to perform statistical analysis of single-cell attributes at multiple levels of organization
 (whole community, sub-population, colonies, generations, subtrees of individual colonies, etc.).
 Analytics capabilities are categorized into:
 \itemize{
@@ -90,7 +99,7 @@ The user can also monitor how the life of a selected cell evolves in the movie u
 
 \section{Error correction}{
 
-The package allows users to correct
+ViSCA allows users to correct
 \itemize{
 \item tracking errors with \code{\link{extract_branch}}, \code{\link{get_cand_mother_cells}} and \code{\link{add_branch}}.
 \item segmantation errors with \code{\link{split_cell}}, \code{\link{get_cand_merge_cells}} and \code{\link{merge_cells}}.

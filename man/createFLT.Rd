@@ -17,7 +17,7 @@ A named list with the following components:
 a connected lineage tree containing the imaginary \emph{root} cells (object of class \code{"igraph"}).
 \cr\cr
 Attribute \code{"colony"} in the \code{LTmain} depicts the starting colony of each cell instant
-(i.e. the colony of the corresponding colony's \emph{root} cell from which a cell instant emerged).
+(i.e. the colony of the corresponding colony's \emph{root} cell from which a cell instant emanated).
 This approach is necessary in order to keep track of merging colonies.}
 \item{branches}{A list with the motherless branches of the overall FLT.
 Each branch (element of the list) is a connected lineage tree (object of class \code{"igraph"}).
@@ -41,7 +41,7 @@ in the corresponding element of the \code{cell_list}.
 The imaginary \emph{root} cells have value \code{-1} in all numeric attributes and value \code{FALSE} in all boolean attributes.
 The following character string values also form attributes of each FLT node:
 \itemize{
-\item \code{"name"} is the label of the cell, a non-zero positive integer number stored as a character string.
+\item \code{"name"} is the label of the cell in the FLT, a non-zero positive integer number stored as a character string.
 Value \code{"1"} corresponds to the main \emph{root} cell.
 Values \code{"1+<i>"} correspond to the colonies' \emph{root} cells, where \code{"<i>"} is the colony ID.
 The rest values correspond to the cell instants in the \code{cell_list} (1-1 correspondence).

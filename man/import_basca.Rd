@@ -64,25 +64,28 @@ should not have tracked cells, until they merge (if this is the case) with anoth
 This means that no element should \emph{point} to such colony instants.
 \item \code{pixelList} is a Nx2 matrix of non-zero integer values
 denoting the pixels of the cell in colony coordinates
-(i.e. relative to the \code{colImage} of the \code{colId}^th element in the \code{col_list}).
+(i.e. relative to the \code{colImage} of the \code{\ifelse{html}{\out{colId<sup>th</sup>}}{\eqn{colId^{th}}}}
+element in the \code{col_list}).
 Each one of the N rows indicates a pixel of the cell.
 The first column represents the row and the second the column of the pixel.
 \item \code{boundaryPixelList} is a Nx2 matrix of non-zero integer values
 denoting the boundary pixels of the cell in colony coordinates
-(i.e. relative to the \code{colImage} of the \code{colId}^th element in the \code{col_list}).
+(i.e. relative to the \code{colImage} of the \code{\ifelse{html}{\out{colId<sup>th</sup>}}{\eqn{colId^{th}}}}
+element in the \code{col_list}).
 Each one of the N rows indicates a boundary pixel of the cell.
 The first column represents the row and the second the column of the boundary pixel.
 \item \code{centroid} is an 1x2 matrix of non-zero numeric values
 denoting the centroid (geometric center) of the cell in colony coordinates
-(i.e. relative to the \code{colImage} of the \code{colId}^th element in the \code{col_list}).
+(i.e. relative to the \code{colImage} of the \code{\ifelse{html}{\out{colId<sup>th</sup>}}{\eqn{colId^{th}}}}
+element in the \code{col_list}).
 It is the \emph{mean} of the \code{pixelList} by column.
 \item \code{length} is the length of the cell in units of length, a non-zero positive numeric value.
 \item \code{width} is the width of the cell in units of length, a non-zero positive numeric value.
 \item \code{LW} is the length-to-width ratio, a non-zero positive numeric value.
 \item \code{area} is the area of the cell in squared units of length, a non-zero positive numeric value.
 \item \code{perimeter} is the perimeter of the cell in units of length, a non-zero positive numeric value.
-\item \code{minorAxis}
-\item \code{majorAxis}
+\item \code{minorAxis} is the short axis of the ellipse surrounding the cell in units of length, a non-zero positive numeric value.
+\item \code{majorAxis} is the long axis of the ellipse surrounding the cell in units of length, a non-zero positive numeric value.
 \item \code{eccentricity} is a numeric value in the range \code{[0, 1]}
 defining the eccentricity of the cell.
 \item \code{orientation} is a numeric value in the range \code{[0, 360)}
@@ -91,21 +94,26 @@ defining the orientation of the cell in \emph{degrees}.
 defining the solidity of the cell.
 \item \code{distFromCentroid} is the distance of the centroid of the cell from the centroid of its colony
 (i.e. the euclidean distance between the \code{centroid} and
-the \code{colCentroid} of the \code{colId}^th element in the \code{col_list})
+the \code{colCentroid} of the \code{\ifelse{html}{\out{colId<sup>th</sup>}}{\eqn{colId^{th}}}}
+element in the \code{col_list})
 in units of length, a non-zero positive numeric value.
 \item \code{isOnBoundary} is a logical value (\code{TRUE} or \code{FALSE})
 indicating whether the cell is on the boundary of its colony or not.
 It is \code{TRUE} in case there is more than 66% overlapping between the \code{pixelList} and
-the \code{colBoundaryPixels} of the \code{colId}^th element in the \code{col_list},
+the \code{colBoundaryPixels} of the \code{\ifelse{html}{\out{colId<sup>th</sup>}}{\eqn{colId^{th}}}}
+element in the \code{col_list},
 \code{FALSE} otherwise.
 \item \code{fluorescenceInt<i>} is a Nx1 matrix of positive numeric values indicating the
-fluoresence intensity of channel \code{<i>} for each one of the pixels in \code{pixelList}
-(1-1 correspondence).
-\item \code{fluorescenceInt<i>.mean} is the \emph{mean} of \code{fluorescenceInt<i>}, a positive numeric value.
-\item \code{fluorescenceInt<i>.std} is the \emph{standard deviation} of \code{fluorescenceInt<i>}, a positive numeric value.
-\item \code{fluorescenceInt<i>.coverage} is the percentage of the cell area covered by fluoresence,
+cell fluorescence intensity of channel \code{<i>}.
+The values correspond to each one of the pixels in \code{pixelList} (1-1 correspondence).
+\item \code{fluorescenceInt<i>.mean} is the \emph{mean} cell fluorescence intensity of channel \code{<i>},
+a positive numeric value.
+\item \code{fluorescenceInt<i>.std} is the \emph{standard deviation} of the cell fluorescence intensity of channel \code{<i>},
+a positive numeric value.
+\item \code{fluorescenceInt<i>.coverage} is the percentage of the cell area covered by fluorescence of channel \code{<i>},
 a numeric value in the range \code{[0, 1]}.
 }
+The \code{fluorescenceInt<i>*} components are included in case they were exctracted by \emph{BaSCA}.
 }
 \item{Nframes}{Number of frames in the movie, a non-zero positive integer value.
 IDs of frames are in the range \code{[1, Nframes]}.}

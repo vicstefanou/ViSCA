@@ -107,19 +107,19 @@
 #' \code{"gamma"} for \emph{Gamma} and
 #' \code{"lnorm"} for \emph{Lognormal} distribution or
 #' \code{NA} if no distribution was fitted (less than 2 unique values of \code{attr} exist).
-#' \item \code{mean} is the \emph{\mu} parameter (\emph{mean}) of the \emph{Normal} distribution (a numeric value),
+#' \item \code{mean} is the \emph{\ifelse{html}{\out{mu}}{\eqn{\mu}}} parameter (\emph{mean}) of the \emph{Normal} distribution (a numeric value),
 #' or \code{NA} in case \code{distr != "norm"}.
-#' \item \code{sd} is the \emph{\sigma} parameter (\emph{standard deviation}) of the \emph{Normal} distribution (a non-zero positive numeric value),
+#' \item \code{sd} is the \emph{\ifelse{html}{\out{sigma}}{\eqn{\sigma}}} parameter (\emph{standard deviation}) of the \emph{Normal} distribution (a non-zero positive numeric value),
 #' or \code{NA} in case \code{distr != "norm"}.
-#' \item \code{shape} is the \emph{\alpha} parameter (\emph{shape}) of the \emph{Gamma} distribution (a non-zero positive numeric value),
+#' \item \code{shape} is the \emph{\ifelse{html}{\out{alpha}}{\eqn{\alpha}}} parameter (\emph{shape}) of the \emph{Gamma} distribution (a non-zero positive numeric value),
 #' or \code{NA} in case \code{distr != "gamma"}.
-#' \item \code{rate} is the \emph{\beta} parameter (\emph{rate}) of the \emph{Gamma} distribution (a non-zero positive numeric value),
+#' \item \code{rate} is the \emph{\ifelse{html}{\out{beta}}{\eqn{\beta}}} parameter (\emph{rate}) of the \emph{Gamma} distribution (a non-zero positive numeric value),
 #' or \code{NA} in case \code{distr != "gamma"}.
-#' \item \code{meanlog} is the \emph{\mu} parameter of the \emph{Lognormal} distribution (a numeric value),
+#' \item \code{meanlog} is the \emph{\ifelse{html}{\out{mu}}{\eqn{\mu}}} parameter of the \emph{Lognormal} distribution (a numeric value),
 #' or \code{NA} in case \code{distr != "lnorm"}.
-#' \item \code{sdlog} is the \emph{\sigma} parameter of the \emph{Lognormal} distribution (a non-zero positive numeric value),
+#' \item \code{sdlog} is the \emph{\ifelse{html}{\out{sigma}}{\eqn{\sigma}}} parameter of the \emph{Lognormal} distribution (a non-zero positive numeric value),
 #' or \code{NA} in case \code{distr != "lnorm"}.
-#' \item \code{BIC} is the \emph{BIC} value of the fitted distribution (a numeric value),
+#' \item \code{BIC} is the BIC value of the fitted distribution (a numeric value),
 #' or \code{NA} in case \code{distr = NA}.
 #' \item \code{dBIC} is a character string summarizing the strength of the chosen distribution model
 #' specified in \code{distr} against the other models with higher BIC values.

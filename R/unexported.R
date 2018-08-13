@@ -295,9 +295,11 @@ updateCellInBascaList <- function(x, frame, colony, colId, col_list, pixelRatio,
 
   x$length <- as.numeric(x$length) * pixelRatio
   x$width <- as.numeric(x$width) * pixelRatio
+  x$minorAxis <- as.numeric(x$minorAxis) * pixelRatio
+  x$majorAxis <- as.numeric(x$majorAxis) * pixelRatio
   x$LW <-  x$length / x$width
-  x$area <- dim(x$pixelList)[1] * pixelRatio * pixelRatio
-  x$perimeter <- dim(x$boundaryPixelList)[1] * pixelRatio
+  x$area <- nrow(x$pixelList) * pixelRatio * pixelRatio
+  x$perimeter <- nrow(x$boundaryPixelList) * pixelRatio
 
   x$lengthInPixels <- NULL
   x$widthInPixels <- NULL
@@ -512,7 +514,7 @@ checkColList <- function(col_list, frameH, frameW) {
     stop(paste("colony list:", m))
   } else {
     vals <- sapply(col_list, function(x) x$colName)
-    if (length(grep(pattern = "^f\\d+_c\\d+$", x = vals, value=FALSE)) != length(vals)) {
+    if (length(grep(pattern = "^f\\d+_c\\d+$", x = vals, value = FALSE)) != length(vals)) {
       stop("colony list: Wrong values in component \"colName\"\n")
     }
   }
@@ -607,7 +609,7 @@ checkCellList <- function(cell_list, col_list) {
     stop(paste("cell list:", m))
   } else {
     vals <- sapply(cell_list, function(x) x$frame)
-    if (class(vals) != "integer") {
+    if (!(class(vals) %in% c("numeric", "integer"))) {
       stop("cell list: Values in component \"frame\" are not integers\n")
     }
     if (length(which(vals <= 0)) != 0) {
@@ -625,7 +627,7 @@ checkCellList <- function(cell_list, col_list) {
     stop(paste("cell list:", m))
   } else {
     vals <- sapply(cell_list, function(x) x$colony)
-    if (class(vals) != "integer") {
+    if (!(class(vals) %in% c("numeric", "integer"))) {
       stop("cell list: Values in component \"colony\" are not integers\n")
     }
     if (length(which(vals <= 0)) != 0) {
